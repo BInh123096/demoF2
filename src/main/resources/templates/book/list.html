@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initialscale=1.0">
+    <title>My Book List</title>
+    <th:block th:replace="~{layout::link-css}"></th:block>
+    <th:block th:replace="~{layout::custom-css}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-light">
+                <div class="container-fluid">
+                    <h1>Danh Sách</h1>
+                    <form class="d-flex" th:action="@{/books/search}"
+                          method="get">
+                        <input class="form-control me-2" type="search"
+                               placeholder="Tìm Kiếm" aria-label="Search" name="keyword">
+                        <button class="btn btn-outline-success"
+                                type="submit">Tìm Kiếm
+                        </button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="container py-3 py-md-5 bg-light">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="mb-4">Danh sách sản phẩm</h4>
+            </div>
+            <div th:each="book : ${books}" class="col-md-3 mb-4">
+                <div class="card">
+                    <img th:src="@{'http://localhost:8080/imgs/' + ${book.image_url} + '-' + ${book.originalFilename}}" class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${book.title}"></h5>
+                        <p class="card-text">
+                            <span class="selling-price"
+                                  th:text="${book.price} + 'VND'"></span>
+                        </p>
+                        <div>
+                            <a th:href="@{/books/detail/{id}(id=${book.id})}" class="btn btn-primary">Chi Tiết</a><br>
+                            <a class="btn btn-primary"
+                               sec:authorize="hasAnyAuthority('ADMIN')"
+                               th:href="@{/books/edit/{id}(id=${book.getId()})}">Sửa</a>
+                            <a class="btn btn-danger"
+                               sec:authorize="hasAnyAuthority('ADMIN')"
+                               th:href="@{/books/delete/{id}(id=${book.getId()})}"
+                               onclick="return confirm('Bạn có chắc muốn xóa không?')">Xóa</a>
+                            <form sec:authorize="hasAnyAuthority('USER')" th:action="@{/books/add-to-cart}" method="post"
+                                  class="d-inline">
+                                <input type="hidden" name="id" th:value="${book.getId()}">
+                                <input type="hidden" name="name"
+                                       th:value="${book.getTitle()}">
+                                <input type="hidden" name="price"
+                                       th:value="${book.getPrice()}">
+                                <button type="submit" class="btn btn-success"
+                                        onclick="return confirm('Bạn có muốn thêm giỏ không?')">
+                                    Add to cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center pagination-sm"
+        th:each="i : ${#numbers.sequence(0, totalPages)}">
+        <li class="page-item" th:classappend="${currentPage == i} ?
+'active'">
+            <a class="page-link" th:href="@{/books(pageNo=${i})}"
+               th:text="${i}"></a>
+        </li>
+    </ul>
+</nav>
+<th:block th:replace="~{layout::footer}"></th:block>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initialscale=1.0">
+    <th:block th:replace="~{layout::link-css}"></th:block>
+    <th:block th:replace="~{layout::custom-css}"></th:block>
+    <title>Thêm Sách</title>
+    <style>
+        .image-container {
+            float: right; /* Đặt float sang phải */
+            width: 40%; /* Đặt chiều rộng */
+            margin-left: 20px; /* Để khoảng cách với form */
+        }
+        .image-container img {
+            max-width: 100%; /* Ảnh sẽ không vượt quá chiều rộng của container */
+            display: block; /* Hiển thị ảnh là khối để căn chỉnh */
+            border: 1px solid #ccc; /* Đường viền xung quanh ảnh */
+            border-radius: 5px; /* Bo góc */
+        }
+    </style>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container">
+    <div class="image-container">
+        <!-- Hiển thị hình ảnh đã được chọn -->
+        <label class="form-label" for="file">Ảnh:</label>
+        <img id="imagePreview" src="#" alt="Preview">
+    </div>
+
+    <div>
+        <h1>Thêm Sách</h1>
+        <form th:action="@{/books/add}" th:object="${book}" method="post" enctype="multipart/form-data">
+            <div class="col-6 mb-3">
+                <label class="form-label" for="title">Tên Sách:</label><span class="text-danger">*</span>
+                <input class="form-control" type="text" placeholder="Nhập Tên Sách"
+                       th:field="*{title}" id="title" required autofocus>
+                <span class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+            </div>
+
+            <div class="col-6 mb-3">
+                <label class="form-label" for="file">Ảnh:</label>
+                <input type="file" name="file" id="file" onchange="previewImage(this)"/>
+                <!-- Thẻ <img> được di chuyển vào phần image-container -->
+            </div>
+
+            <div class="col-6 mb-3">
+                <label class="form-label" for="author">Tác Giả:</label>
+                <input class="form-control" type="text" th:field="*{author}"
+                       id="author" placeholder="Nhập Tên Tác Giả">
+                <span class="text-danger" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label" for="price">Giá:</label><span class="text-danger">*</span>
+                <input class="form-control" required type="text"
+                       th:field="*{price}" id="price" placeholder="Nhập Giá">
+                <span class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label" for="description">Mô Tả:</label>
+                <input class="form-control" type="text" th:field="*{description}"
+                       id="description" placeholder="Nhập Mô Tả">
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label" for="category">Danh Mục:</label><span class="text-danger">*</span>
+                <select class="form-control" id="category" name="category.id">
+                    <option value="">-----Danh Mục-----</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.getId()}"
+                            th:text="${category.getName()}"></option>
+                </select>
+                <span class="text-danger" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Thêm" />
+        </form>
+        <br>
+        <a th:href="@{/books}">Về Danh Sách</a>
+    </div>
+</div>
+<th:block th:replace="~{layout::footer}"></th:block>
+
+<script th:inline="javascript">
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                $('#imagePreview').attr('src', event.target.result);
+                $('#imagePreview').css('display', 'block');
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+</body>
+</html>

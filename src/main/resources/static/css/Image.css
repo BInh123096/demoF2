@@ -1,0 +1,7 @@
+<style>
+    #imagePreview {
+        max-width: 100%;
+        height: auto;
+        display: none; /* Ẩn hình ảnh ban đầu */
+    }
+</style>

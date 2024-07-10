@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initialscale=1.0">
+    <title th:text="${book.title} + ' - Chi tiết sách'"></title>
+    <th:block th:replace="~{layout::link-css}"></th:block>
+    <th:block th:replace="~{layout::custom-css}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-light">
+                <div class="container-fluid">
+                    <h1>Chi Tiết Sách</h1>
+                    <form class="d-flex" th:action="@{/books/search}"
+                          method="get">
+                        <input class="form-control me-2" type="search"
+                               placeholder="Search" aria-label="Search" name="keyword">
+                        <button class="btn btn-outline-success"
+                                type="submit">Search
+                        </button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <section class="product-container">
+        <div class="img-card">
+            <!-- Ensure proper image source concatenation -->
+            <img th:src="@{'http://localhost:8080/imgs/' + ${book.image_url} + '-' + ${book.originalFilename}}" alt="" id="featured-image">
+        </div>
+        <div class="product-info">
+            <!-- Use th:text to set text content -->
+            <h3 th:text="${book.title}"></h3>
+            <h5>Giá: <span th:text="${book.price}"></span> VND</h5>
+            <p><span th:text="${book.description}"></span></p>
+
+            <div class="quantity">
+                <!-- Use th:object to bind form object and th:field for form fields -->
+                <form sec:authorize="hasAnyAuthority('USER')" th:action="@{/books/add-to-cart}" method="post" class="d-inline">
+                    <input type="hidden" name="id" th:value="${book.id}">
+                    <input type="hidden" name="name" th:value="${book.title}">
+                    <input type="hidden" name="price" th:value="${book.price}">
+                    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to add this book to cart?')">
+                        Thêm Vào Giỏ Hàng
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+
+    <a class="btn btn-success" th:href="@{/books}">
+        Quay lại
+    </a>
+
+
+    <section class="comments-section">
+        <h3>Các Bình Luận</h3>
+        <div th:each="comment : ${book.comments}">
+            <p>
+                <strong th:text="${comment.username}">Người Dùng</strong>:
+                <span th:text="${comment.content}">Bình Luận</span>
+                <span th:text="'(' + ${comment.star} + ' stars)'">Sao</span>
+            </p>
+            <form sec:authorize="hasAuthority('ADMIN')" th:action="@{/books/delete-comment/{id}(id=${comment.id})}" method="get" class="d-inline">
+                <button type="submit" class="btn btn-danger">Xóa</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="add-comment-section">
+        <h3>Thêm Bình Luận</h3>
+        <form th:action="@{/books/add-comment}" method="post" th:object="${newComment}">
+            <input type="hidden" name="bookId" th:value="${bookId}">
+            <input type="hidden" name="username" th:value="${username}" value="User">
+            <div class="form-group">
+                <label for="content">Bình Luận:</label>
+                <textarea id="content" th:field="*{content}" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="star">Số Sao:</label>
+                <select id="star" th:field="*{star}">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Đăng</button>
+        </form>
+    </section>
+
+</div>
+</body>
+</html>

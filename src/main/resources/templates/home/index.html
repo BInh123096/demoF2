@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ỨNG DỤNG QUẢN LÝ SÁCH</title>
+    <th:block th:replace="~{layout::link-css}"></th:block>
+    <th:block th:replace="~{layout::custom-css}"></th:block>
+    <style>
+        /* Thêm CSS tùy chỉnh cho trang chủ */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .jumbotron {
+            background-color: #007bff;
+            color: white;
+            padding: 2rem;
+            margin-top: 20px;
+            border-radius: 0.5rem;
+            display: flex; /* Sử dụng flexbox để dàn layout */
+            flex-direction: column; /* Xếp các thành phần theo chiều dọc */
+            align-items: center; /* Căn giữa các thành phần theo chiều ngang */
+            text-align: center; /* Căn giữa các thành phần văn bản */
+        }
+        .jumbotron h1 {
+            font-size: 3rem;
+        }
+        .jumbotron p {
+            font-size: 1.5rem;
+        }
+        .jumbotron hr {
+            width: 50%;
+            margin: 20px auto;
+            border-color: white;
+        }
+        .jumbotron .btn-primary {
+            margin-top: 20px;
+        }
+        .contact-info {
+            margin-top: 20px;
+            display: flex;
+            align-items: center; /* Căn giữa nội dung theo chiều dọc */
+        }
+        .contact-info img {
+            max-width: 200px; /* Điều chỉnh kích thước ảnh */
+            margin-right: 20px; /* Khoảng cách với nội dung bên phải */
+            border-radius: 0.5rem; /* Bo góc cho ảnh */
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); /* Đổ bóng cho ảnh */
+        }
+        .contact-info p {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .social-links {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #007bff;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Chào mừng bạn đến với SBOOK.com</h1>
+        <p class="lead">Nơi bạn có thể quản lý và tìm kiếm các cuốn sách một cách dễ dàng.</p>
+        <hr class="my-4">
+        <p>Bắt đầu khám phá ngay!</p>
+        <a class="btn btn-primary btn-lg" href="/books" role="button">Danh sách sách</a>
+    </div>
+
+    <div class="contact-info">
+        <img src="https://mia.vn/media/uploads/blog-du-lich/nha-sach-lon-nhat-sai-gon-01-1695635193.jpg" alt="Sách" />
+        <div>
+            <p>Địa chỉ: Số nhà 10, Đường ABC, Thành phố XYZ</p>
+            <p>Email: contact@sbook.com</p>
+            <p>Điện thoại: 0123-456-789</p>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{layout::footer}"></th:block>
+</body>
+</html>
